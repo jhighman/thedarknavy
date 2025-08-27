@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+@layer base {
+  body {
+    @apply bg-navy text-white-spark font-body;
+    line-height: 1.5;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-bold uppercase;
+    text-shadow: 2px 2px 4px #000000;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 bg-golden-blaze text-black-void font-heading font-bold rounded-full
+           transition-all duration-300 hover:bg-teal-pulse hover:scale-105;
+  }
+  
+  .container-custom {
+    @apply container mx-auto px-4;
+  }
+  
+  .nav-link {
+    @apply text-white-spark hover:text-golden-blaze transition-colors duration-300 hover:scale-105;
+  }
+  
+  .ray-bg {
+    background: radial-gradient(circle, #1A2A44 0%, #FFC107 100%);
+  }
+  
+  .teaser-card {
+    @apply border-4 border-navy transform transition-all duration-300;
+  }
+  
+  .play-btn {
+    @apply bg-golden-blaze text-black-void hover:bg-teal-pulse transition-all duration-300;
+  }
+  
+  .progress-bar {
+    @apply bg-teal-pulse;
+  }
+}
