@@ -1,0 +1,106 @@
+# DevCo Band Website Configuration
+# This file contains all band-specific content that can be customized
+
+# Site Metadata
+site:
+  title: "DevCo - Sound of the AI Age"
+  description: "DevCo: A band born from code, fueled by chaos. Experience the sound of the AI age."
+  copyright: "2025 DevCo. All rights reserved."
+
+# Band Information
+band:
+  name: "DevCo"
+  tagline: "Sound of the AI Age"
+  email: "band@devcoband.com"
+  
+  # Hero Section
+  hero:
+    background_video: "./assets/videos/hero-background.webm"
+    background_fallback: "./assets/images/hero-fallback.webp"
+    cta_buttons:
+      - text: "Stream on Spotify"
+        url: "https://open.spotify.com"
+      - text: "Stream on Apple Music"
+        url: "https://music.apple.com"
+
+  # About Section
+  about:
+    heading: "Born from code, fueled by chaos"
+    image: "./assets/images/band-image.webp"
+    bio:
+      - "In the void between digital and analog, we emerged. Not as musicians, but as anomalies in the system. Our sound—a glitch in the matrix of conventional music."
+      - "We don't create; we compile. We don't perform; we execute. Each track is an algorithm of emotion, each beat a binary pulse of existence."
+      - "The future isn't coming. It's compiling in our studio, one error message at a time."
+    quote:
+      text: "The sound of tomorrow's yesterday"
+      audio: "./assets/audio/quote.mp3"
+
+# Music Releases
+music:
+  section_title: "Latest Releases"
+  releases:
+    - title: "Digital Dystopia"
+      type: "audio"
+      description: "Our latest single exploring the intersection of technology and human emotion."
+      file: "./assets/audio/teaser-1.mp3"
+      links:
+        - platform: "Spotify"
+          url: "https://open.spotify.com"
+        - platform: "Apple Music"
+          url: "https://music.apple.com"
+    
+    - title: "Neural Network"
+      type: "video"
+      description: "A visual journey through the digital landscape of sound."
+      file: "./assets/videos/teaser-1.webm"
+      thumbnail: "./assets/images/video-thumbnail.webp"
+      links:
+        - platform: "YouTube"
+          url: "https://youtube.com"
+          text: "Watch Full Video"
+    
+    - title: "Quantum Resonance"
+      type: "audio"
+      description: "Exploring the depths of sound through algorithmic composition."
+      file: "./assets/audio/teaser-2.mp3"
+      links:
+        - platform: "Spotify"
+          url: "https://open.spotify.com"
+        - platform: "Apple Music"
+          url: "https://music.apple.com"
+    
+    - title: "Binary Sunset"
+      type: "audio"
+      description: "A melodic journey through the digital twilight."
+      file: "./assets/audio/teaser-3.mp3"
+      links:
+        - platform: "Spotify"
+          url: "https://open.spotify.com"
+        - platform: "Apple Music"
+          url: "https://music.apple.com"
+
+# Social Media Links
+social:
+  - platform: "Instagram"
+    url: "https://instagram.com"
+    icon: "instagram"
+  - platform: "Twitter"
+    url: "https://twitter.com"
+    icon: "twitter"
+  - platform: "YouTube"
+    url: "https://youtube.com"
+    icon: "youtube"
+  - platform: "Spotify"
+    url: "https://spotify.com"
+    icon: "spotify"
+
+# Navigation
+navigation:
+  - text: "Home"
+    url: "#hero"
+  - text: "Music"
+    url: "#music"
+  - text: "About"
+    url: "#about"
+  - text: "Contact"
+    url: "#contact"

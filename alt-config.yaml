@@ -1,0 +1,106 @@
+# Alternative Band Website Configuration
+# This file shows how the site can be customized for a different band
+
+# Site Metadata
+site:
+  title: "Synthwave Collective - Retro Future Sounds"
+  description: "Synthwave Collective: Bringing the sounds of the 80s into the future with nostalgic electronic music."
+  copyright: "2025 Synthwave Collective. All rights reserved."
+
+# Band Information
+band:
+  name: "Synthwave Collective"
+  tagline: "Retro Future Sounds"
+  email: "contact@synthwavecollective.com"
+  
+  # Hero Section
+  hero:
+    background_video: "./assets/videos/hero-background.webm"
+    background_fallback: "./assets/images/hero-fallback.webp"
+    cta_buttons:
+      - text: "Listen on Bandcamp"
+        url: "https://bandcamp.com"
+      - text: "Follow on SoundCloud"
+        url: "https://soundcloud.com"
+
+  # About Section
+  about:
+    heading: "Where nostalgia meets the future"
+    image: "./assets/images/band-image.webp"
+    bio:
+      - "We are a collective of producers and musicians dedicated to reviving the sounds of the 1980s through modern electronic production techniques."
+      - "Our music combines vintage synthesizers, drum machines, and neon-soaked atmospheres to create a sonic landscape that's both nostalgic and forward-thinking."
+      - "Inspired by classic films, video games, and the aesthetic of a decade that never truly existed, we craft audio journeys to a retro future."
+    quote:
+      text: "The past reimagined through tomorrow's technology"
+      audio: "./assets/audio/quote.mp3"
+
+# Music Releases
+music:
+  section_title: "Featured Tracks"
+  releases:
+    - title: "Neon Horizon"
+      type: "audio"
+      description: "A driving synthwave track with pulsing arpeggios and nostalgic melodies."
+      file: "./assets/audio/teaser-1.mp3"
+      links:
+        - platform: "Bandcamp"
+          url: "https://bandcamp.com"
+        - platform: "SoundCloud"
+          url: "https://soundcloud.com"
+    
+    - title: "Midnight Drive"
+      type: "video"
+      description: "A visual and sonic journey through neon-lit city streets."
+      file: "./assets/videos/teaser-1.webm"
+      thumbnail: "./assets/images/video-thumbnail.webp"
+      links:
+        - platform: "YouTube"
+          url: "https://youtube.com"
+          text: "Watch Full Video"
+    
+    - title: "Chrome Dreams"
+      type: "audio"
+      description: "Ambient synthwave with cinematic textures and retro drum machines."
+      file: "./assets/audio/teaser-2.mp3"
+      links:
+        - platform: "Bandcamp"
+          url: "https://bandcamp.com"
+        - platform: "SoundCloud"
+          url: "https://soundcloud.com"
+    
+    - title: "Arcade Memories"
+      type: "audio"
+      description: "Chiptune-inspired synthwave that evokes classic gaming nostalgia."
+      file: "./assets/audio/teaser-3.mp3"
+      links:
+        - platform: "Bandcamp"
+          url: "https://bandcamp.com"
+        - platform: "SoundCloud"
+          url: "https://soundcloud.com"
+
+# Social Media Links
+social:
+  - platform: "Instagram"
+    url: "https://instagram.com"
+    icon: "instagram"
+  - platform: "Twitter"
+    url: "https://twitter.com"
+    icon: "twitter"
+  - platform: "YouTube"
+    url: "https://youtube.com"
+    icon: "youtube"
+  - platform: "SoundCloud"
+    url: "https://soundcloud.com"
+    icon: "spotify"
+
+# Navigation
+navigation:
+  - text: "Home"
+    url: "#hero"
+  - text: "Music"
+    url: "#music"
+  - text: "About"
+    url: "#about"
+  - text: "Contact"
+    url: "#contact"
