@@ -80,6 +80,21 @@ MIT
 - Body: Open Sans
 - Text features drop shadows for that vintage poster feel
 
+## Asset Creation
+
+### Hero Fallback Image
+To create the hero-fallback.webp image from band-image.webp:
+
+1. Use band-image.webp as the starting point
+2. Crop to 16:9 ratio (e.g., 1200x675px) for a hero layout
+3. Add a semi-transparent navy overlay
+4. Add "DEVCO" text at 70% opacity with the tagline "Sound of the AI Age"
+5. Convert using ImageMagick:
+   ```
+   convert band-image.webp -resize 1200x675 -quality 85 hero-fallback.webp
+   ```
+6. Target file size should be <150KB with 85% quality
+
 ## Credits
 
 - Fonts: Google Fonts (Bebas Neue, Open Sans)

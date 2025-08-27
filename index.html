@@ -34,15 +34,18 @@
 
     <!-- Hero Section with Video Background -->
     <section class="relative h-screen flex items-center justify-center overflow-hidden ray-bg">
-        <!-- Video Background -->
+        <!-- Video Background with Picture Fallback -->
         <div class="absolute inset-0 z-0">
-            <video class="w-full h-full object-cover" autoplay loop muted playsinline>
-                <source src="./assets/videos/hero-background.webm" type="video/webm">
-                <!-- Fallback image if video doesn't load -->
-                <img src="./assets/images/hero-fallback.webp" alt="DevCo band" class="w-full h-full object-cover">
-            </video>
+            <picture>
+                <source media="(min-width: 600px)" srcset="./assets/videos/hero-background.webm" type="video/webm">
+                <img src="./assets/images/hero-fallback.webp" alt="DevCo Hero Fallback" class="w-full h-full object-cover" loading="lazy">
+            </picture>
             <!-- Dark Overlay -->
-            <div class="absolute inset-0 bg-navy bg-opacity-50"></div>
+            <div class="absolute inset-0 bg-black/30"></div>
+            <!-- DEVCO Overlay Text at 70% opacity -->
+            <div class="absolute inset-0 flex items-center justify-center opacity-70 pointer-events-none">
+                <h2 class="text-8xl md:text-9xl font-heading text-white-spark" style="text-shadow: 4px 4px 8px #000000;">DEVCO</h2>
+            </div>
         </div>
         
         <!-- Hero Content -->
