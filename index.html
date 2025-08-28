@@ -19,6 +19,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
     
+    <!-- Three.js for 3D animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <!-- JS-YAML for configuration -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
 
@@ -60,8 +63,17 @@
     </style>
 </head>
 <body class="bg-navy text-white-spark overflow-x-hidden">
-    <!-- Cursor Follower -->
-    <div class="cursor-follower fixed w-8 h-8 rounded-full bg-golden-blaze mix-blend-difference pointer-events-none z-50 opacity-0"></div>
+    <!-- Moon Cursor Follower -->
+    <div class="cursor-follower fixed w-24 h-24 rounded-full pointer-events-none z-50 opacity-0 moon-cursor">
+        <!-- Moon texture overlay -->
+        <div class="absolute inset-0 rounded-full bg-gradient-to-br from-gray-200 via-gray-300 to-gray-100 opacity-90"></div>
+        <!-- Moon craters -->
+        <div class="absolute top-4 left-6 w-4 h-4 rounded-full bg-gray-400 opacity-30"></div>
+        <div class="absolute top-12 right-8 w-6 h-6 rounded-full bg-gray-400 opacity-30"></div>
+        <div class="absolute bottom-5 left-10 w-3 h-3 rounded-full bg-gray-400 opacity-30"></div>
+        <!-- Moon shadow -->
+        <div class="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-transparent to-gray-900 opacity-20"></div>
+    </div>
 
     <!-- Sticky Header/Navigation -->
     <header class="fixed top-0 left-0 w-full bg-navy bg-opacity-90 z-50 backdrop-blur-sm">
@@ -75,6 +87,7 @@
             <ul class="hidden md:flex space-x-8">
                 <li><a href="#hero" class="nav-link text-lg">Home</a></li>
                 <li><a href="#music" class="nav-link text-lg">Music</a></li>
+                <li><a href="#channels" class="nav-link text-lg">Channels</a></li>
                 <li><a href="#about" class="nav-link text-lg">About</a></li>
                 <li><a href="#contact" class="nav-link text-lg">Contact</a></li>
             </ul>
@@ -85,44 +98,95 @@
             <ul class="text-center space-y-8">
                 <li><a href="#hero" class="nav-link text-3xl">Home</a></li>
                 <li><a href="#music" class="nav-link text-3xl">Music</a></li>
+                <li><a href="#channels" class="nav-link text-3xl">Channels</a></li>
                 <li><a href="#about" class="nav-link text-3xl">About</a></li>
                 <li><a href="#contact" class="nav-link text-3xl">Contact</a></li>
             </ul>
         </div>
     </header>
 
-    <!-- Hero Section with Video Background -->
+    <!-- Hero Section with 3D Animation and Latest Content Teaser -->
     <section id="hero" class="relative h-screen flex items-center justify-center overflow-hidden">
-        <!-- Video Background with Picture Fallback -->
-        <div class="absolute inset-0 z-0">
-            <video autoplay muted loop playsinline class="w-full h-full object-cover">
-                <source src="./assets/videos/hero-background.webm" type="video/webm">
-                <img src="./assets/images/hero-fallback.webp" alt="DevCo Hero Fallback" class="w-full h-full object-cover">
-            </video>
-            <!-- Dark Overlay with Gradient -->
-            <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-navy/50 to-navy"></div>
-        </div>
+        <!-- 3D Animation Canvas -->
+        <canvas id="hero-canvas" class="absolute inset-0 z-0"></canvas>
+        
+        <!-- Dark Overlay with Gradient -->
+        <div class="absolute inset-0 z-0 bg-gradient-to-b from-black/70 via-navy/50 to-navy opacity-70"></div>
         
         <!-- Hero Content -->
-        <div class="container-custom relative z-10 text-center hero-text">
-            <h1 class="text-6xl md:text-8xl font-heading mb-4 glitch-text" data-text="DevCo">DevCo</h1>
-            <p class="text-xl md:text-2xl text-white-spark mb-8 typewriter-text">Sound of the AI Age</p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" class="btn btn-glow">
-                    Stream on Spotify
-                </a>
-                <a href="https://music.apple.com" target="_blank" rel="noopener noreferrer" class="btn btn-glow">
-                    Stream on Apple Music
-                </a>
+        <div class="container-custom relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <!-- Left Side: Band Info -->
+            <div class="text-left hero-text">
+                <h1 class="text-6xl md:text-8xl font-heading mb-4 glitch-text" data-text="DevCo">DevCo</h1>
+                <p class="text-xl md:text-2xl text-white-spark mb-4 typewriter-text">Sound of the AI Age</p>
+                
+                <!-- Punch Text - Static Version -->
+                <div class="mt-8 mb-8 pt-4 border-t border-teal-pulse/30">
+                    <p class="text-xl italic text-teal-pulse hover:text-golden-blaze transition-colors mb-2">where code meets chaos...</p>
+                    <p class="text-xl italic text-teal-pulse hover:text-golden-blaze transition-colors mb-2">echoes of digital dreams</p>
+                    <p class="text-xl italic text-teal-pulse hover:text-golden-blaze transition-colors mb-2">glitching through reality</p>
+                    <p class="text-xl italic text-teal-pulse hover:text-golden-blaze transition-colors mb-2">syntax of our souls</p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" class="btn btn-glow">
+                        Stream on Spotify
+                    </a>
+                    <a href="https://music.apple.com" target="_blank" rel="noopener noreferrer" class="btn btn-glow">
+                        Stream on Apple Music
+                    </a>
+                </div>
             </div>
-            <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-bounce">
-                <a href="#music" class="text-white-spark">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                    </svg>
-                </a>
+            
+            <!-- Right Side: Latest Release Teaser -->
+            <div class="latest-release-teaser bg-navy/30 backdrop-blur-sm p-6 rounded-lg border-l-4 border-golden-blaze transform-gpu hover:scale-[1.02] transition-all duration-500">
+                <h2 class="text-2xl font-heading mb-4">Latest Release</h2>
+                <div class="flex flex-col md:flex-row gap-4 items-center">
+                    <div class="w-full md:w-1/3">
+                        <div class="aspect-square rounded-lg overflow-hidden relative group">
+                            <img id="latest-release-image" src="./assets/images/video-thumbnail.webp" alt="Latest Release" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button id="play-latest-release" class="play-btn w-16 h-16 rounded-full flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-2/3">
+                        <h3 id="latest-release-title" class="text-xl font-heading mb-2">Digital Dystopia</h3>
+                        <p id="latest-release-description" class="text-white-spark text-sm mb-4">Our latest single exploring the intersection of technology and human emotion.</p>
+                        <div class="custom-audio-player relative mb-4">
+                            <audio id="latest-release-audio" preload="metadata">
+                                <source id="latest-release-audio-source" src="./assets/audio/teaser-1.mp3" type="audio/mp3">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <button class="play-btn w-12 h-12 rounded-full flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </button>
+                            <div class="progress-container w-full h-1 bg-black-void mt-2 overflow-hidden rounded-full">
+                                <div class="progress-bar h-full w-0 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="flex space-x-4">
+                            <a id="latest-release-spotify" href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" class="btn flex-1 text-center text-sm py-1">
+                                Spotify
+                            </a>
+                            <a id="latest-release-apple" href="https://music.apple.com" target="_blank" rel="noopener noreferrer" class="btn flex-1 text-center text-sm py-1">
+                                Apple Music
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        
+        <!-- No scroll down indicator as requested -->
     </section>
 
     <!-- Music Section -->
@@ -239,6 +303,61 @@
                         <a href="https://music.apple.com" target="_blank" rel="noopener noreferrer" class="btn flex-1 text-center">
                             Apple Music
                         </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Channels Section -->
+    <section id="channels" class="py-20 relative">
+        <div class="absolute inset-0 z-0 opacity-10">
+            <div class="circuit-bg h-full w-full"></div>
+        </div>
+        <div class="container-custom relative z-10">
+            <h2 class="text-5xl md:text-6xl font-heading mb-12 text-center section-title">Our <span class="text-golden-blaze">Channels</span></h2>
+            
+            <!-- Channel Categories -->
+            <div class="mb-12">
+                <ul class="flex flex-wrap justify-center gap-4 mb-8" id="channel-tabs">
+                    <li><button class="btn active" data-category="streaming">Streaming</button></li>
+                    <li><button class="btn" data-category="social">Social</button></li>
+                    <li><button class="btn" data-category="video">Video</button></li>
+                    <li><button class="btn" data-category="digital_stores">Digital Stores</button></li>
+                    <li><button class="btn" data-category="misc">Misc</button></li>
+                </ul>
+            </div>
+            
+            <!-- Channel Content -->
+            <div id="channels-container">
+                <!-- Channels will be dynamically inserted here -->
+                <div class="channel-category active" id="streaming-channels">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Streaming channels will be inserted here -->
+                    </div>
+                </div>
+                
+                <div class="channel-category hidden" id="social-channels">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Social channels will be inserted here -->
+                    </div>
+                </div>
+                
+                <div class="channel-category hidden" id="video-channels">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Video channels will be inserted here -->
+                    </div>
+                </div>
+                
+                <div class="channel-category hidden" id="digital_stores-channels">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Digital stores channels will be inserted here -->
+                    </div>
+                </div>
+                
+                <div class="channel-category hidden" id="misc-channels">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Misc channels will be inserted here -->
                     </div>
                 </div>
             </div>

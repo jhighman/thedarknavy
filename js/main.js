@@ -1,6 +1,10 @@
 // Global configuration object
 let config = null;
 
+// Global variables for 3D animation
+let scene, camera, renderer, particles;
+let animationId;
+
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', async () => {
   // Load configuration from YAML file
@@ -23,6 +27,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   // Initialize cursor follower
   initCursorFollower();
+  
+  // Initialize 3D animation in hero section
+  init3DAnimation();
+  
+  // Handle window resize for 3D animation
+  window.addEventListener('resize', onWindowResize);
+});
+
+// Clean up animation when leaving the page
+window.addEventListener('beforeunload', () => {
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+  }
 });
 
 /**
@@ -83,26 +100,19 @@ function applyConfiguration() {
     heroSection.querySelector('h1').setAttribute('data-text', config.band.name);
     heroSection.querySelector('.typewriter-text').textContent = config.band.tagline;
     
-    // Update video background
-    const videoSource = heroSection.querySelector('video source');
-    if (videoSource) {
-      videoSource.setAttribute('src', config.band.hero.background_video);
-    }
-    
-    // Update image fallback
-    const imgFallback = heroSection.querySelector('video img');
-    if (imgFallback) {
-      imgFallback.setAttribute('src', config.band.hero.background_fallback);
-    }
-    
     // Update CTA buttons
-    const ctaButtons = heroSection.querySelectorAll('.btn');
+    const ctaButtons = heroSection.querySelectorAll('.hero-text .btn');
     config.band.hero.cta_buttons.forEach((button, index) => {
       if (ctaButtons[index]) {
         ctaButtons[index].textContent = button.text;
         ctaButtons[index].setAttribute('href', button.url);
       }
     });
+    
+    // Update latest release teaser
+    updateLatestReleaseTeaser();
+    
+    // Punch text is now static in HTML
   }
   
   // Update music section
@@ -208,13 +218,24 @@ function applyConfiguration() {
       emailLink.setAttribute('href', `mailto:${config.band.email}`);
     }
     
-    // Update social links
+    // Update social links - use channels.social if available, otherwise fall back to social
     const socialLinks = contactSection.querySelectorAll('.social-icon');
-    config.social.forEach((social, index) => {
-      if (socialLinks[index]) {
-        socialLinks[index].setAttribute('href', social.url);
-      }
-    });
+    
+    if (config.channels && config.channels.social) {
+      // Use the new channels structure
+      config.channels.social.forEach((social, index) => {
+        if (socialLinks[index] && social.enabled) {
+          socialLinks[index].setAttribute('href', social.url);
+        }
+      });
+    } else if (config.social) {
+      // Fall back to the old social structure
+      config.social.forEach((social, index) => {
+        if (socialLinks[index]) {
+          socialLinks[index].setAttribute('href', social.url);
+        }
+      });
+    }
   }
   
   // Update navigation
@@ -232,7 +253,289 @@ function applyConfiguration() {
       mobileNavLinks[index].setAttribute('href', item.url);
     }
   });
+  // Render channels section if it exists
+  if (config.channels) {
+    renderChannelsSection();
+  }
 }
+
+/**
+ * Render the channels section from the configuration
+ */
+function renderChannelsSection() {
+  const channelsSection = document.querySelector('#channels');
+  if (!channelsSection || !config.channels) return;
+  
+  // Update section title
+  const titleElement = channelsSection.querySelector('h2');
+  if (titleElement) {
+    const titleParts = titleElement.innerHTML.split('<span');
+    titleElement.innerHTML = `Our <span${titleParts[1]}`;
+  }
+  
+  // Set up tab functionality
+  const tabs = channelsSection.querySelectorAll('#channel-tabs button');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Remove active class from all tabs
+      tabs.forEach(t => t.classList.remove('active'));
+      
+      // Add active class to clicked tab
+      tab.classList.add('active');
+      
+      // Hide all channel categories
+      const categories = channelsSection.querySelectorAll('.channel-category');
+      categories.forEach(cat => cat.classList.add('hidden'));
+      
+      // Show the selected category
+      const category = tab.getAttribute('data-category');
+      const categoryElement = document.querySelector(`#${category}-channels`);
+      if (categoryElement) {
+        categoryElement.classList.remove('hidden');
+        categoryElement.classList.add('active');
+      }
+    });
+  });
+  
+  // Render each channel category
+  Object.keys(config.channels).forEach(category => {
+    const categoryContainer = document.querySelector(`#${category}-channels .grid`);
+    if (!categoryContainer) return;
+    
+    // Clear existing content
+    categoryContainer.innerHTML = '';
+    
+    // Add each channel in this category
+    config.channels[category].forEach(channel => {
+      if (channel.enabled) {
+        const channelCard = document.createElement('div');
+        channelCard.className = 'bg-navy/50 p-6 rounded-lg backdrop-blur-sm transform-gpu hover:scale-[1.02] transition-all duration-500 hover:shadow-[0_0_15px_rgba(255,193,7,0.3)]';
+        
+        // Create channel content
+        let channelContent = `
+          <h3 class="text-xl font-heading mb-3">${channel.platform}</h3>
+          <a href="${channel.url}" target="_blank" rel="noopener noreferrer" class="btn block text-center mb-4">
+            Visit ${channel.platform}
+          </a>
+        `;
+        
+        // Add content preview if available
+        if (channel.content) {
+          channelContent += `
+            <div class="mt-4 border-t border-golden-blaze/30 pt-4">
+              <h4 class="text-lg font-heading mb-2">Latest Content</h4>
+              <p class="text-white-spark text-sm mb-3">${channel.content.post || ''}</p>
+              ${channel.content.link ? `<a href="${channel.content.link}" target="_blank" rel="noopener noreferrer" class="text-golden-blaze text-sm hover:underline">View Content</a>` : ''}
+            </div>
+          `;
+        }
+        
+        // Add sub-features if available
+        if (channel.sub_features && channel.sub_features.length > 0) {
+          channelContent += `<div class="mt-4 border-t border-golden-blaze/30 pt-4">
+            <h4 class="text-lg font-heading mb-2">Sub-Features</h4>
+            <ul class="space-y-2">`;
+          
+          channel.sub_features.forEach(subFeature => {
+            if (subFeature.enabled) {
+              channelContent += `
+                <li>
+                  <a href="${subFeature.url}" target="_blank" rel="noopener noreferrer" class="text-golden-blaze hover:underline">
+                    ${subFeature.name}
+                  </a>
+                </li>
+              `;
+            }
+          });
+          
+          channelContent += `</ul></div>`;
+        }
+        
+        channelCard.innerHTML = channelContent;
+        categoryContainer.appendChild(channelCard);
+      }
+    });
+    
+    // If no channels in this category, show a message
+    if (categoryContainer.children.length === 0) {
+      const emptyMessage = document.createElement('div');
+      emptyMessage.className = 'col-span-full text-center py-8';
+      emptyMessage.innerHTML = `<p class="text-white-spark">No ${category} channels available.</p>`;
+      categoryContainer.appendChild(emptyMessage);
+    }
+  });
+}
+
+/**
+ * Update the latest release teaser in the hero section
+ */
+function updateLatestReleaseTeaser() {
+  // Find the latest release (first item in the releases array)
+  if (!config.music || !config.music.releases || config.music.releases.length === 0) return;
+  
+  const latestRelease = config.music.releases[0];
+  
+  // Update the teaser content
+  const titleElement = document.getElementById('latest-release-title');
+  const descriptionElement = document.getElementById('latest-release-description');
+  const audioSourceElement = document.getElementById('latest-release-audio-source');
+  const imageElement = document.getElementById('latest-release-image');
+  const spotifyLink = document.getElementById('latest-release-spotify');
+  const appleLink = document.getElementById('latest-release-apple');
+  
+  if (titleElement) titleElement.textContent = latestRelease.title;
+  if (descriptionElement) descriptionElement.textContent = latestRelease.description;
+  
+  // Update audio source
+  if (audioSourceElement && latestRelease.file) {
+    audioSourceElement.setAttribute('src', latestRelease.file);
+  }
+  
+  // Update image if it's a video type with thumbnail
+  if (imageElement) {
+    if (latestRelease.type === 'video' && latestRelease.thumbnail) {
+      imageElement.setAttribute('src', latestRelease.thumbnail);
+    } else if (latestRelease.type === 'audio') {
+      // For audio, we could use a default image or generate one
+      // Here we'll just keep the default from the HTML
+    }
+  }
+  
+  // Update links
+  if (latestRelease.links && latestRelease.links.length > 0) {
+    latestRelease.links.forEach(link => {
+      if (link.platform === 'Spotify' && spotifyLink) {
+        spotifyLink.setAttribute('href', link.url);
+      } else if (link.platform === 'Apple Music' && appleLink) {
+        appleLink.setAttribute('href', link.url);
+      }
+    });
+  }
+  
+  // Reload the audio element to apply the new source
+  const audioElement = document.getElementById('latest-release-audio');
+  if (audioElement) {
+    audioElement.load();
+  }
+}
+
+/**
+ * The punch text feature is now implemented directly in HTML with static content
+ * and simple CSS hover effects for better reliability.
+ */
+
+/**
+ * Initialize 3D animation in the hero section
+ */
+function init3DAnimation() {
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+  
+  // Initialize Three.js scene
+  scene = new THREE.Scene();
+  
+  // Set up camera
+  const { width, height } = canvas.getBoundingClientRect();
+  camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+  camera.position.z = 30;
+  
+  // Set up renderer
+  renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  
+  // Create particle geometry
+  const particleGeometry = new THREE.BufferGeometry();
+  const particleCount = 1500;
+  
+  const positions = new Float32Array(particleCount * 3);
+  const colors = new Float32Array(particleCount * 3);
+  
+  const colorOptions = [
+    new THREE.Color(0xFFC107), // golden-blaze
+    new THREE.Color(0x26A69A), // teal-pulse
+    new THREE.Color(0xFFFFFF)  // white
+  ];
+  
+  for (let i = 0; i < particleCount; i++) {
+    // Position particles in a sphere
+    const radius = 20 + Math.random() * 10;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.random() * Math.PI;
+    
+    positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);     // x
+    positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta); // y
+    positions[i * 3 + 2] = radius * Math.cos(phi);                   // z
+    
+    // Assign random colors from our options
+    const color = colorOptions[Math.floor(Math.random() * colorOptions.length)];
+    colors[i * 3] = color.r;
+    colors[i * 3 + 1] = color.g;
+    colors[i * 3 + 2] = color.b;
+  }
+  
+  particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  
+  // Create particle material
+  const particleMaterial = new THREE.PointsMaterial({
+    size: 0.1,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.8
+  });
+  
+  // Create particle system
+  particles = new THREE.Points(particleGeometry, particleMaterial);
+  scene.add(particles);
+  
+  // Start animation loop
+  animate();
+}
+
+/**
+ * Animation loop for 3D particles
+ */
+function animate() {
+  animationId = requestAnimationFrame(animate);
+  
+  // Rotate the particle system
+  if (particles) {
+    particles.rotation.x += 0.0005;
+    particles.rotation.y += 0.001;
+    
+    // Make particles react to mouse movement
+    const mouseX = (window.mouseX || 0) - window.innerWidth / 2;
+    const mouseY = (window.mouseY || 0) - window.innerHeight / 2;
+    
+    particles.rotation.x += (mouseY * 0.00001);
+    particles.rotation.y += (mouseX * 0.00001);
+  }
+  
+  // Render the scene
+  renderer.render(scene, camera);
+}
+
+/**
+ * Handle window resize for 3D animation
+ */
+function onWindowResize() {
+  if (!camera || !renderer || !canvas) return;
+  
+  const canvas = document.getElementById('hero-canvas');
+  const { width, height } = canvas.getBoundingClientRect();
+  
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  
+  renderer.setSize(width, height);
+}
+
+// Track mouse position for 3D animation
+document.addEventListener('mousemove', (event) => {
+  window.mouseX = event.clientX;
+  window.mouseY = event.clientY;
+});
 
 /**
  * Initialize mobile menu toggle
@@ -522,42 +825,130 @@ function initMediaPlayers() {
 }
 
 /**
- * Initialize cursor follower
+ * Initialize moon cursor follower - bounded to hero section only and hidden over latest release
  */
 function initCursorFollower() {
   const cursor = document.querySelector('.cursor-follower');
+  const heroSection = document.querySelector('#hero');
+  const latestReleaseTeaser = document.querySelector('.latest-release-teaser');
   
-  if (cursor) {
+  if (cursor && heroSection && latestReleaseTeaser) {
     // Only enable on desktop
     if (window.innerWidth > 768) {
-      cursor.style.opacity = '1';
+      cursor.style.opacity = '0'; // Start hidden
+      
+      // Add a slight delay to make the moon movement more smooth and celestial
+      let mouseX = 0;
+      let mouseY = 0;
+      let cursorX = 0;
+      let cursorY = 0;
+      let isInHeroSection = false;
+      let isOverLatestRelease = false;
+      
+      // Check if mouse is in hero section
+      function checkIfInHeroSection(x, y) {
+        const heroRect = heroSection.getBoundingClientRect();
+        return (
+          x >= heroRect.left &&
+          x <= heroRect.right &&
+          y >= heroRect.top &&
+          y <= heroRect.bottom
+        );
+      }
+      
+      // Check if mouse is over latest release teaser
+      function checkIfOverLatestRelease(x, y) {
+        const releaseRect = latestReleaseTeaser.getBoundingClientRect();
+        return (
+          x >= releaseRect.left &&
+          x <= releaseRect.right &&
+          y >= releaseRect.top &&
+          y <= releaseRect.bottom
+        );
+      }
       
       document.addEventListener('mousemove', (e) => {
-        gsap.to(cursor, {
-          x: e.clientX,
-          y: e.clientY,
-          duration: 0.2,
-          ease: 'power2.out'
-        });
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        // Check positions
+        isInHeroSection = checkIfInHeroSection(mouseX, mouseY);
+        isOverLatestRelease = checkIfOverLatestRelease(mouseX, mouseY);
+        
+        // Show/hide cursor based on position
+        // Hide when over latest release section for easier clicking
+        if (isInHeroSection && !isOverLatestRelease) {
+          cursor.style.opacity = '1';
+        } else {
+          cursor.style.opacity = '0';
+        }
       });
       
-      // Scale effect on links
-      const links = document.querySelectorAll('a, button, .play-btn');
-      links.forEach(link => {
-        link.addEventListener('mouseenter', () => {
-          gsap.to(cursor, {
-            scale: 1.5,
-            duration: 0.3
+      // Use requestAnimationFrame for smoother movement
+      function animateMoon() {
+        if (isInHeroSection && !isOverLatestRelease) {
+          // Add slight lag for more natural moon-like movement
+          const lagFactor = 0.1;
+          cursorX += (mouseX - cursorX) * lagFactor;
+          cursorY += (mouseY - cursorY) * lagFactor;
+          
+          gsap.set(cursor, {
+            x: cursorX,
+            y: cursorY,
           });
-        });
+          
+          // Add a subtle floating effect
+          gsap.to(cursor, {
+            rotation: Math.sin(Date.now() / 3000) * 5, // Gentle rotation
+            duration: 0.5,
+            overwrite: true
+          });
+        }
         
-        link.addEventListener('mouseleave', () => {
-          gsap.to(cursor, {
-            scale: 1,
-            duration: 0.3
+        requestAnimationFrame(animateMoon);
+      }
+      
+      animateMoon();
+      
+      // Special effects on links within hero section (excluding latest release)
+      const heroTextSection = heroSection.querySelector('.hero-text');
+      if (heroTextSection) {
+        const heroLinks = heroTextSection.querySelectorAll('a, button, .play-btn');
+        heroLinks.forEach(link => {
+          link.addEventListener('mouseenter', () => {
+            if (isInHeroSection && !isOverLatestRelease) {
+              // Make the moon glow brighter on hover
+              gsap.to(cursor, {
+                scale: 1.2,
+                duration: 0.5,
+                boxShadow: '0 0 30px rgba(255, 255, 255, 0.8), 0 0 50px rgba(255, 255, 255, 0.6), 0 0 70px rgba(255, 255, 255, 0.4)'
+              });
+              
+              // Make the moon craters more visible
+              gsap.to(cursor.querySelectorAll('div'), {
+                opacity: '+= 0.2',
+                duration: 0.5
+              });
+            }
+          });
+          
+          link.addEventListener('mouseleave', () => {
+            if (isInHeroSection && !isOverLatestRelease) {
+              gsap.to(cursor, {
+                scale: 1,
+                duration: 0.5,
+                boxShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.4), 0 0 40px rgba(255, 255, 255, 0.2)'
+              });
+              
+              // Return craters to normal opacity
+              gsap.to(cursor.querySelectorAll('div'), {
+                opacity: '-= 0.2',
+                duration: 0.5
+              });
+            }
           });
         });
-      });
+      }
     }
   }
 }

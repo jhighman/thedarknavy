@@ -8,9 +8,10 @@ This guide provides detailed instructions on how to customize the website conten
 2. [Adding/Modifying Music Releases](#addingmodifying-music-releases)
 3. [Adding/Modifying Videos](#addingmodifying-videos)
 4. [Updating Band Information](#updating-band-information)
-5. [Adding Advertisements](#adding-advertisements)
-6. [Customizing Social Media Links](#customizing-social-media-links)
-7. [Advanced Customization](#advanced-customization)
+5. [Managing Omni-Channel Content](#managing-omni-channel-content)
+6. [Adding Advertisements](#adding-advertisements)
+7. [Customizing Social Media Links](#customizing-social-media-links)
+8. [Advanced Customization](#advanced-customization)
 
 ## Basic Configuration Structure
 
@@ -20,7 +21,7 @@ The configuration file (`config.yaml`) is organized into several main sections:
 site:       # Website metadata (title, description)
 band:       # Band information (name, tagline, email, etc.)
 music:      # Music releases and tracks
-social:     # Social media links
+channels:   # Omni-channel content for various platforms
 navigation: # Navigation menu items
 ```
 
@@ -125,6 +126,170 @@ band:
 2. Update the hero section with your background video/image and call-to-action buttons
 3. Update the about section with your band image, bio paragraphs, and quote
 
+## Managing Omni-Channel Content
+
+The website now features an omni-channel structure that allows you to manage content across multiple platforms. This is defined in the `channels` section of the configuration file.
+
+### Channels Structure
+
+The channels section is organized into several categories:
+
+```yaml
+channels:
+  streaming:     # Music streaming platforms (Spotify, Apple Music, etc.)
+  social:        # Social media platforms (Instagram, TikTok, etc.)
+  video:         # Video platforms (Vevo, YouTube Music, etc.)
+  digital_stores: # Digital music stores (iTunes, Beatport, etc.)
+  misc:          # Miscellaneous platforms (Peloton, etc.)
+```
+
+Each category contains an array of platforms, and each platform has the following structure:
+
+```yaml
+- platform: "Platform Name"         # Name of the platform
+  url: "https://platform.com/artist/your-artist-id"  # URL to your profile on the platform
+  icon: "platform-icon"             # Icon name for the platform
+  enabled: true                     # Whether the platform is enabled
+  content:                          # Content specific to this platform
+    post: "Your post text here"     # Text for posts on this platform
+    link: "https://platform.com/specific-content-link"  # Link to specific content
+    media: "./assets/path/to/media.file"  # Media file for this platform
+```
+
+Some platforms may also have sub-features:
+
+```yaml
+sub_features:
+  - name: "Sub-feature Name"        # Name of the sub-feature (e.g., Instagram Reels)
+    url: "https://platform.com/sub-feature"  # URL to your profile for this sub-feature
+    enabled: true                   # Whether the sub-feature is enabled
+    content:                        # Content specific to this sub-feature
+      post: "Your post text here"   # Text for posts on this sub-feature
+      link: "https://platform.com/specific-content-link"  # Link to specific content
+      media: "./assets/path/to/media.file"  # Media file for this sub-feature
+```
+
+### Creating Content for Each Channel Type
+
+#### Streaming Platforms
+
+For streaming platforms (Spotify, Apple Music, Tidal, etc.), focus on:
+
+1. **Post Text**: Create short, engaging messages that encourage listeners to stream your music. Include the track name and relevant hashtags.
+2. **Link**: Provide a direct link to your track on the platform.
+3. **Media**: Link to a preview audio file that represents the track.
+
+Example:
+```yaml
+- platform: "Spotify"
+  url: "https://open.spotify.com/artist/devco"
+  icon: "spotify"
+  enabled: true
+  content:
+    post: "Stream our latest track 'Digital Dystopia' on Spotify now! #DevCo #NewRelease"
+    link: "https://open.spotify.com/track/digital-dystopia"
+    media: "./assets/audio/teaser-1.mp3"
+```
+
+#### Social Media Platforms
+
+For social media platforms (TikTok, Instagram, Facebook, etc.), focus on:
+
+1. **Post Text**: Create platform-specific messages that match the platform's style and audience. Keep TikTok posts short and trendy, Instagram posts visual and hashtag-rich, and Facebook posts more informative.
+2. **Link**: Provide a direct link to your post or content on the platform.
+3. **Media**: Link to appropriate media for the platform (videos for TikTok, images for Instagram, etc.).
+
+Example:
+```yaml
+- platform: "TikTok"
+  url: "https://tiktok.com/@devco"
+  icon: "tiktok"
+  enabled: true
+  content:
+    post: "Check out our latest beat drop on TikTok! Join the #DevCoChallenge 🌀"
+    link: "https://tiktok.com/@devco/video/digital-dystopia"
+    media: "./assets/videos/tiktok-teaser.webm"
+```
+
+For platforms with sub-features (like Instagram Reels or YouTube Shorts), create specific content for each:
+
+```yaml
+sub_features:
+  - name: "Instagram Reels"
+    url: "https://instagram.com/devco/reels"
+    enabled: true
+    content:
+      post: "Quick hit of 'Digital Dystopia' on Reels! #DevCo #Reels"
+      link: "https://instagram.com/devco/reels/digital-dystopia"
+      media: "./assets/videos/reels-teaser.webm"
+```
+
+#### Video Platforms
+
+For video platforms (Vevo, YouTube Music, etc.), focus on:
+
+1. **Post Text**: Create descriptions that highlight the visual aspects of your content and encourage viewers to watch.
+2. **Link**: Provide a direct link to your video on the platform.
+3. **Media**: Link to the video file or a preview.
+
+Example:
+```yaml
+- platform: "Vevo"
+  url: "https://vevo.com/artist/devco"
+  icon: "vevo"
+  enabled: true
+  content:
+    post: "'Neural Network' music video now live on Vevo! #DevCo #MusicVideo"
+    link: "https://vevo.com/watch/neural-network"
+    media: "./assets/videos/neural-network.webm"
+```
+
+#### Digital Stores
+
+For digital stores (iTunes, Beatport, etc.), focus on:
+
+1. **Post Text**: Create messages that encourage purchases and downloads. Highlight any special offers or exclusive content.
+2. **Link**: Provide a direct link to your music on the store.
+3. **Media**: Link to a preview of the content.
+
+Example:
+```yaml
+- platform: "iTunes"
+  url: "https://music.apple.com/artist/devco"
+  icon: "itunes"
+  enabled: true
+  content:
+    post: "Download 'Digital Dystopia' on iTunes now! #DevCo #NewMusic"
+    link: "https://music.apple.com/track/digital-dystopia"
+    media: "./assets/audio/teaser-1.mp3"
+```
+
+#### Miscellaneous Platforms
+
+For miscellaneous platforms (Peloton, etc.), tailor your content to the specific platform's audience and purpose:
+
+Example:
+```yaml
+- platform: "Peloton"
+  url: "https://onepeloton.com/artists/devco"
+  icon: "peloton"
+  enabled: true
+  content:
+    post: "Ride to 'Digital Dystopia' on Peloton! #DevCo #WorkoutVibes"
+    link: "https://onepeloton.com/class/devco-workout"
+    media: "./assets/audio/teaser-1.mp3"
+```
+
+### Best Practices for Omni-Channel Content
+
+1. **Platform-Specific Content**: Tailor your content to each platform's unique audience and format.
+2. **Consistent Branding**: Maintain consistent messaging and branding across all channels.
+3. **Appropriate Media**: Use platform-appropriate media formats and sizes.
+4. **Relevant Hashtags**: Include platform-specific and trending hashtags to increase visibility.
+5. **Call to Action**: Always include a clear call to action in your post text.
+6. **Track Performance**: Use the `enabled` flag to manage which platforms are active and focus on those that perform best.
+7. **Update Regularly**: Keep your content fresh and up-to-date across all channels.
+
 ## Adding Advertisements
 
 You can add advertisements or promotional content by customizing the existing structure or adding new sections. Here's how to add a promotional banner:
@@ -190,29 +355,14 @@ if (config.promotions && config.promotions.length > 0) {
 
 ## Customizing Social Media Links
 
-Social media links are defined in the `social` section:
+Social media links are now managed through the omni-channel structure in the `channels` section. The old `social` section has been replaced with a more comprehensive structure.
 
-```yaml
-social:
-  - platform: "Instagram"
-    url: "https://instagram.com/yourbandname"
-    icon: "instagram"
-  - platform: "Twitter"
-    url: "https://twitter.com/yourbandname"
-    icon: "twitter"
-  - platform: "YouTube"
-    url: "https://youtube.com/c/yourbandname"
-    icon: "youtube"
-  - platform: "Spotify"
-    url: "https://open.spotify.com/artist/your-artist-id"
-    icon: "spotify"
-```
+To update your social media links:
 
-### To update social media links:
-
-1. Edit the existing entries with your band's social media URLs
-2. Add or remove platforms as needed
-3. The `icon` field should match one of the available SVG icons in the HTML
+1. Navigate to the appropriate category in the `channels` section (usually `channels.social`)
+2. Edit the existing entries with your band's social media URLs
+3. Set `enabled: true` for platforms you want to display, and `enabled: false` for those you want to hide
+4. The `icon` field should match one of the available SVG icons in the HTML
 
 ## Advanced Customization
 
@@ -333,5 +483,7 @@ While the YAML configuration focuses on content, you can also customize some vis
 3. **Optimize media files** for web use to ensure fast loading times
 4. **Keep file paths consistent** with the structure defined in the configuration
 5. **Use relative paths** for all assets to ensure portability
+6. **Maintain platform-specific content** for each channel to maximize engagement
+7. **Regularly update your omni-channel content** to keep it fresh and relevant
 
 For more advanced customization, you may need to modify the HTML, CSS, and JavaScript files directly. However, most content changes can be made entirely through the YAML configuration file.

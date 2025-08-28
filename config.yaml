@@ -22,6 +22,14 @@ band:
         url: "https://open.spotify.com"
       - text: "Stream on Apple Music"
         url: "https://music.apple.com"
+    punch:
+      enabled: true
+      text:
+        - "where code meets chaos..."
+        - "echoes of digital dreams"
+        - "glitching through reality"
+        - "syntax of our souls"
+      animation_speed: 1.5
 
   # About Section
   about:
@@ -79,27 +87,164 @@ music:
         - platform: "Apple Music"
           url: "https://music.apple.com"
 
-# Social Media Links
-social:
-  - platform: "Instagram"
-    url: "https://instagram.com"
-    icon: "instagram"
-  - platform: "Twitter"
-    url: "https://twitter.com"
-    icon: "twitter"
-  - platform: "YouTube"
-    url: "https://youtube.com"
-    icon: "youtube"
-  - platform: "Spotify"
-    url: "https://spotify.com"
-    icon: "spotify"
+# Omni-Channels: The Digital Web of Domination
+# All Ditto Music channels included with content fields for posts, links, or media specific to each platform.
+# Enabled switch controls visibility in CMS. Content fields allow platform-specific customization (e.g., post text, video links).
+channels:
+  streaming:
+    - platform: "Spotify"
+      url: "https://open.spotify.com/artist/devco"
+      icon: "spotify"
+      enabled: true
+      content:
+        post: "Stream our latest track 'Digital Dystopia' on Spotify now! #DevCo #NewRelease"
+        link: "https://open.spotify.com/track/digital-dystopia"
+        media: "./assets/audio/teaser-1.mp3"
+    - platform: "Apple Music"
+      url: "https://music.apple.com/artist/devco"
+      icon: "apple-music"
+      enabled: true
+      content:
+        post: "Dive into 'Digital Dystopia' on Apple Music. Feel the chaos! #DevCo"
+        link: "https://music.apple.com/track/digital-dystopia"
+        media: "./assets/audio/teaser-1.mp3"
+    - platform: "Tidal"
+      url: "https://tidal.com/artist/devco"
+      icon: "tidal"
+      enabled: true
+      content:
+        post: "Experience 'Digital Dystopia' in high-fidelity on Tidal. #DevCo #NewMusic"
+        link: "https://tidal.com/track/digital-dystopia"
+        media: "./assets/audio/teaser-1.mp3"
+    - platform: "Amazon Music"
+      url: "https://music.amazon.com/artists/devco"
+      icon: "amazon-music"
+      enabled: true
+      content:
+        post: "Get lost in 'Digital Dystopia' on Amazon Music. #DevCo #SoundOfTheFuture"
+        link: "https://music.amazon.com/track/digital-dystopia"
+        media: "./assets/audio/teaser-1.mp3"
 
-# Navigation
+  social:
+    - platform: "TikTok"
+      url: "https://tiktok.com/@devco"
+      icon: "tiktok"
+      enabled: true
+      content:
+        post: "Check out our latest beat drop on TikTok! Join the #DevCoChallenge 🌀"
+        link: "https://tiktok.com/@devco/video/digital-dystopia"
+        media: "./assets/videos/tiktok-teaser.webm"
+    - platform: "Instagram"
+      url: "https://instagram.com/devco"
+      icon: "instagram"
+      enabled: true
+      content:
+        post: "New vibes alert! 'Digital Dystopia' is live on Instagram. #DevCo #NewRelease"
+        link: "https://instagram.com/devco/post/digital-dystopia"
+        media: "./assets/images/instagram-post.webp"
+      sub_features:
+        - name: "Instagram Reels"
+          url: "https://instagram.com/devco/reels"
+          enabled: true
+          content:
+            post: "Quick hit of 'Digital Dystopia' on Reels! #DevCo #Reels"
+            link: "https://instagram.com/devco/reels/digital-dystopia"
+            media: "./assets/videos/reels-teaser.webm"
+    - platform: "Facebook"
+      url: "https://facebook.com/devco"
+      icon: "facebook"
+      enabled: true
+      content:
+        post: "Our new single 'Digital Dystopia' is out! Stream it now. #DevCo"
+        link: "https://facebook.com/devco/post/digital-dystopia"
+        media: "./assets/images/facebook-post.webp"
+    - platform: "Snapchat"
+      url: "https://snapchat.com/add/devco"
+      icon: "snapchat"
+      enabled: true
+      content:
+        post: "Snap us for a sneak peek of 'Digital Dystopia'! #DevCo"
+        link: "https://snapchat.com/add/devco/story"
+        media: "./assets/videos/snapchat-teaser.webm"
+    - platform: "YouTube"
+      url: "https://youtube.com/@devco"
+      icon: "youtube"
+      enabled: true
+      content:
+        post: "Watch the full 'Neural Network' video on YouTube! #DevCo #NewVideo"
+        link: "https://youtube.com/watch?v=neural-network"
+        media: "./assets/videos/neural-network.webm"
+      sub_features:
+        - name: "YouTube Shorts"
+          url: "https://youtube.com/@devco/shorts"
+          enabled: true
+          content:
+            post: "'Digital Dystopia' in 60 seconds! Check our Shorts. #DevCo #Shorts"
+            link: "https://youtube.com/shorts/digital-dystopia"
+            media: "./assets/videos/shorts-teaser.webm"
+    - platform: "Twitch"
+      url: "https://twitch.tv/devco"
+      icon: "twitch"
+      enabled: true
+      content:
+        post: "Join our live stream on Twitch for a 'Digital Dystopia' breakdown! #DevCo"
+        link: "https://twitch.tv/devco/live"
+        media: "./assets/videos/twitch-teaser.webm"
+
+  video:
+    - platform: "Vevo"
+      url: "https://vevo.com/artist/devco"
+      icon: "vevo"
+      enabled: true
+      content:
+        post: "'Neural Network' music video now live on Vevo! #DevCo #MusicVideo"
+        link: "https://vevo.com/watch/neural-network"
+        media: "./assets/videos/neural-network.webm"
+    - platform: "YouTube Music"
+      url: "https://music.youtube.com/channel/devco"
+      icon: "youtube-music"
+      enabled: true
+      content:
+        post: "Stream 'Digital Dystopia' on YouTube Music! #DevCo #NewRelease"
+        link: "https://music.youtube.com/track/digital-dystopia"
+        media: "./assets/audio/teaser-1.mp3"
+
+  digital_stores:
+    - platform: "iTunes"
+      url: "https://music.apple.com/artist/devco"
+      icon: "itunes"
+      enabled: true
+      content:
+        post: "Download 'Digital Dystopia' on iTunes now! #DevCo #NewMusic"
+        link: "https://music.apple.com/track/digital-dystopia"
+        media: "./assets/audio/teaser-1.mp3"
+    - platform: "Beatport"
+      url: "https://beatport.com/artist/devco"
+      icon: "beatport"
+      enabled: true
+      content:
+        post: "Electronic heads, grab 'Digital Dystopia' on Beatport! #DevCo #EDM"
+        link: "https://beatport.com/track/digital-dystopia"
+        media: "./assets/audio/teaser-1.mp3"
+
+  misc:
+    - platform: "Peloton"
+      url: "https://onepeloton.com/artists/devco"
+      icon: "peloton"
+      enabled: true
+      content:
+        post: "Ride to 'Digital Dystopia' on Peloton! #DevCo #WorkoutVibes"
+        link: "https://onepeloton.com/class/devco-workout"
+        media: "./assets/audio/teaser-1.mp3"
+
+# Navigation (updated to include Channels section)
 navigation:
   - text: "Home"
     url: "#hero"
   - text: "Music"
     url: "#music"
+  - text: "Channels"
+    url: "#channels"
   - text: "About"
     url: "#about"
   - text: "Contact"
