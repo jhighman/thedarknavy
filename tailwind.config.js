@@ -7,10 +7,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'navy': '#1A2A44',
-        'golden-blaze': '#FFC107',
-        'teal-pulse': '#26A69A',
+        'navy': '#0F1E33',
+        'golden-blaze': '#C5FF45',
+        'teal-pulse': '#2A9D8F',
         'white-spark': '#FFFFFF',
+        'lime-green': '#C5FF45',
         'black-void': '#000000'
       },
       fontFamily: {

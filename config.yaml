@@ -1,17 +1,17 @@
-# DevCo Band Website Configuration
+# The Dark Navy Band Website Configuration
 # This file contains all band-specific content that can be customized
 
 # Site Metadata
 site:
-  title: "DevCo - Sound of the AI Age"
-  description: "DevCo: A band born from code, fueled by chaos. Experience the sound of the AI age."
-  copyright: "2025 DevCo. All rights reserved."
+  title: "The Dark Navy - Echoes in the Void"
+  description: "The Dark Navy: A post-punk, darkwave band with roots in grunge, goth, and hypnagogic pop. Experience the haunting sounds of minimalist expression."
+  copyright: "2025 The Dark Navy. All rights reserved."
 
 # Band Information
 band:
-  name: "DevCo"
-  tagline: "Sound of the AI Age"
-  email: "band@devcoband.com"
+  name: "The Dark Navy"
+  tagline: "Echoes in the Void"
+  email: "band@thedarknavy.com"
   
   # Hero Section
   hero:
@@ -20,46 +20,46 @@ band:
     cta_buttons:
       - text: "Stream on Spotify"
         url: "https://open.spotify.com"
-      - text: "Stream on Apple Music"
-        url: "https://music.apple.com"
+      - text: "Stream on Bandcamp"
+        url: "https://bandcamp.com"
     punch:
       enabled: true
       text:
-        - "where code meets chaos..."
-        - "echoes of digital dreams"
-        - "glitching through reality"
-        - "syntax of our souls"
+        - "where shadows meet silence..."
+        - "echoes of forgotten memories"
+        - "drifting through emptiness"
+        - "whispers of our souls"
       animation_speed: 1.5
 
   # About Section
   about:
-    heading: "Born from code, fueled by chaos"
+    heading: "Born from darkness, fueled by emotion"
     image: "./assets/images/band-image.webp"
     bio:
-      - "In the void between digital and analog, we emerged. Not as musicians, but as anomalies in the system. Our sound—a glitch in the matrix of conventional music."
-      - "We don't create; we compile. We don't perform; we execute. Each track is an algorithm of emotion, each beat a binary pulse of existence."
-      - "The future isn't coming. It's compiling in our studio, one error message at a time."
+      - "In the shadows between light and sound, we emerged. Not as entertainers, but as vessels for raw emotion. Our sound—a haunting echo in the void of conventional music."
+      - "We don't perform; we channel. We don't entertain; we express. Each track is a fragment of consciousness, each note a pulse of existential contemplation."
+      - "The past isn't gone. It's reverberating through our instruments, one haunting melody at a time."
     quote:
-      text: "The sound of tomorrow's yesterday"
+      text: "The sound of emptiness made tangible"
       audio: "./assets/audio/quote.mp3"
 
 # Music Releases
 music:
   section_title: "Latest Releases"
   releases:
-    - title: "Digital Dystopia"
+    - title: "Spectral Memories"
       type: "audio"
-      description: "Our latest single exploring the intersection of technology and human emotion."
+      description: "Our latest single exploring the fragility of memory through minimalist post-punk soundscapes."
       file: "./assets/audio/teaser-1.mp3"
       links:
         - platform: "Spotify"
           url: "https://open.spotify.com"
-        - platform: "Apple Music"
-          url: "https://music.apple.com"
+        - platform: "Bandcamp"
+          url: "https://bandcamp.com"
     
-    - title: "Neural Network"
+    - title: "Void Silhouettes"
       type: "video"
-      description: "A visual journey through the digital landscape of sound."
+      description: "A visual journey through abandoned spaces and forgotten moments."
       file: "./assets/videos/teaser-1.webm"
       thumbnail: "./assets/images/video-thumbnail.webp"
       links:
@@ -67,174 +67,158 @@ music:
           url: "https://youtube.com"
           text: "Watch Full Video"
     
-    - title: "Quantum Resonance"
+    - title: "Monochrome Whispers"
       type: "audio"
-      description: "Exploring the depths of sound through algorithmic composition."
+      description: "Exploring the depths of isolation through darkwave and hypnagogic textures."
       file: "./assets/audio/teaser-2.mp3"
       links:
         - platform: "Spotify"
           url: "https://open.spotify.com"
-        - platform: "Apple Music"
-          url: "https://music.apple.com"
+        - platform: "Bandcamp"
+          url: "https://bandcamp.com"
     
-    - title: "Binary Sunset"
+    - title: "Faded Polaroids"
       type: "audio"
-      description: "A melodic journey through the digital twilight."
+      description: "A melancholic journey through the remnants of forgotten moments."
       file: "./assets/audio/teaser-3.mp3"
       links:
         - platform: "Spotify"
           url: "https://open.spotify.com"
-        - platform: "Apple Music"
-          url: "https://music.apple.com"
+        - platform: "Bandcamp"
+          url: "https://bandcamp.com"
 
-# Omni-Channels: The Digital Web of Domination
-# All Ditto Music channels included with content fields for posts, links, or media specific to each platform.
+# Omni-Channels: The Analog Web of Expression
+# All channels included with content fields for posts, links, or media specific to each platform.
 # Enabled switch controls visibility in CMS. Content fields allow platform-specific customization (e.g., post text, video links).
 channels:
   streaming:
     - platform: "Spotify"
-      url: "https://open.spotify.com/artist/devco"
+      url: "https://open.spotify.com/artist/thedarknavy"
       icon: "spotify"
       enabled: true
       content:
-        post: "Stream our latest track 'Digital Dystopia' on Spotify now! #DevCo #NewRelease"
-        link: "https://open.spotify.com/track/digital-dystopia"
+        post: "Stream our latest track 'Spectral Memories' on Spotify now! #TheDarkNavy #NewRelease"
+        link: "https://open.spotify.com/track/spectral-memories"
         media: "./assets/audio/teaser-1.mp3"
     - platform: "Apple Music"
-      url: "https://music.apple.com/artist/devco"
+      url: "https://music.apple.com/artist/thedarknavy"
       icon: "apple-music"
       enabled: true
       content:
-        post: "Dive into 'Digital Dystopia' on Apple Music. Feel the chaos! #DevCo"
-        link: "https://music.apple.com/track/digital-dystopia"
+        post: "Dive into 'Spectral Memories' on Apple Music. Feel the emptiness. #TheDarkNavy"
+        link: "https://music.apple.com/track/spectral-memories"
         media: "./assets/audio/teaser-1.mp3"
-    - platform: "Tidal"
-      url: "https://tidal.com/artist/devco"
-      icon: "tidal"
+    - platform: "Bandcamp"
+      url: "https://thedarknavy.bandcamp.com"
+      icon: "bandcamp"
       enabled: true
       content:
-        post: "Experience 'Digital Dystopia' in high-fidelity on Tidal. #DevCo #NewMusic"
-        link: "https://tidal.com/track/digital-dystopia"
+        post: "Experience 'Spectral Memories' on Bandcamp. Support independent music. #TheDarkNavy #PostPunk"
+        link: "https://thedarknavy.bandcamp.com/track/spectral-memories"
         media: "./assets/audio/teaser-1.mp3"
-    - platform: "Amazon Music"
-      url: "https://music.amazon.com/artists/devco"
-      icon: "amazon-music"
+    - platform: "SoundCloud"
+      url: "https://soundcloud.com/thedarknavy"
+      icon: "soundcloud"
       enabled: true
       content:
-        post: "Get lost in 'Digital Dystopia' on Amazon Music. #DevCo #SoundOfTheFuture"
-        link: "https://music.amazon.com/track/digital-dystopia"
+        post: "Get lost in 'Spectral Memories' on SoundCloud. #TheDarkNavy #Darkwave"
+        link: "https://soundcloud.com/thedarknavy/spectral-memories"
         media: "./assets/audio/teaser-1.mp3"
 
   social:
-    - platform: "TikTok"
-      url: "https://tiktok.com/@devco"
-      icon: "tiktok"
-      enabled: true
-      content:
-        post: "Check out our latest beat drop on TikTok! Join the #DevCoChallenge 🌀"
-        link: "https://tiktok.com/@devco/video/digital-dystopia"
-        media: "./assets/videos/tiktok-teaser.webm"
     - platform: "Instagram"
-      url: "https://instagram.com/devco"
+      url: "https://instagram.com/thedarknavy"
       icon: "instagram"
       enabled: true
       content:
-        post: "New vibes alert! 'Digital Dystopia' is live on Instagram. #DevCo #NewRelease"
-        link: "https://instagram.com/devco/post/digital-dystopia"
+        post: "New track alert! 'Spectral Memories' is live. #TheDarkNavy #PostPunk #Darkwave"
+        link: "https://instagram.com/thedarknavy/post/spectral-memories"
         media: "./assets/images/instagram-post.webp"
       sub_features:
         - name: "Instagram Reels"
-          url: "https://instagram.com/devco/reels"
+          url: "https://instagram.com/thedarknavy/reels"
           enabled: true
           content:
-            post: "Quick hit of 'Digital Dystopia' on Reels! #DevCo #Reels"
-            link: "https://instagram.com/devco/reels/digital-dystopia"
+            post: "A glimpse into 'Spectral Memories' on Reels! #TheDarkNavy #Reels"
+            link: "https://instagram.com/thedarknavy/reels/spectral-memories"
             media: "./assets/videos/reels-teaser.webm"
     - platform: "Facebook"
-      url: "https://facebook.com/devco"
+      url: "https://facebook.com/thedarknavy"
       icon: "facebook"
       enabled: true
       content:
-        post: "Our new single 'Digital Dystopia' is out! Stream it now. #DevCo"
-        link: "https://facebook.com/devco/post/digital-dystopia"
+        post: "Our new single 'Spectral Memories' is out! Stream it now. #TheDarkNavy"
+        link: "https://facebook.com/thedarknavy/post/spectral-memories"
         media: "./assets/images/facebook-post.webp"
-    - platform: "Snapchat"
-      url: "https://snapchat.com/add/devco"
-      icon: "snapchat"
+    - platform: "Twitter"
+      url: "https://twitter.com/thedarknavy"
+      icon: "twitter"
       enabled: true
       content:
-        post: "Snap us for a sneak peek of 'Digital Dystopia'! #DevCo"
-        link: "https://snapchat.com/add/devco/story"
-        media: "./assets/videos/snapchat-teaser.webm"
+        post: "Listen to the void. 'Spectral Memories' out now. #TheDarkNavy #PostPunk #Darkwave"
+        link: "https://twitter.com/thedarknavy/status/spectral-memories"
+        media: "./assets/images/twitter-post.webp"
     - platform: "YouTube"
-      url: "https://youtube.com/@devco"
+      url: "https://youtube.com/@thedarknavy"
       icon: "youtube"
       enabled: true
       content:
-        post: "Watch the full 'Neural Network' video on YouTube! #DevCo #NewVideo"
-        link: "https://youtube.com/watch?v=neural-network"
+        post: "Watch the full 'Void Silhouettes' video on YouTube! #TheDarkNavy #MusicVideo"
+        link: "https://youtube.com/watch?v=void-silhouettes"
         media: "./assets/videos/neural-network.webm"
       sub_features:
         - name: "YouTube Shorts"
-          url: "https://youtube.com/@devco/shorts"
+          url: "https://youtube.com/@thedarknavy/shorts"
           enabled: true
           content:
-            post: "'Digital Dystopia' in 60 seconds! Check our Shorts. #DevCo #Shorts"
-            link: "https://youtube.com/shorts/digital-dystopia"
+            post: "'Spectral Memories' in 60 seconds! Check our Shorts. #TheDarkNavy #Shorts"
+            link: "https://youtube.com/shorts/spectral-memories"
             media: "./assets/videos/shorts-teaser.webm"
-    - platform: "Twitch"
-      url: "https://twitch.tv/devco"
-      icon: "twitch"
-      enabled: true
-      content:
-        post: "Join our live stream on Twitch for a 'Digital Dystopia' breakdown! #DevCo"
-        link: "https://twitch.tv/devco/live"
-        media: "./assets/videos/twitch-teaser.webm"
 
   video:
     - platform: "Vevo"
-      url: "https://vevo.com/artist/devco"
+      url: "https://vevo.com/artist/thedarknavy"
       icon: "vevo"
       enabled: true
       content:
-        post: "'Neural Network' music video now live on Vevo! #DevCo #MusicVideo"
-        link: "https://vevo.com/watch/neural-network"
+        post: "'Void Silhouettes' music video now live on Vevo! #TheDarkNavy #MusicVideo"
+        link: "https://vevo.com/watch/void-silhouettes"
         media: "./assets/videos/neural-network.webm"
     - platform: "YouTube Music"
-      url: "https://music.youtube.com/channel/devco"
+      url: "https://music.youtube.com/channel/thedarknavy"
       icon: "youtube-music"
       enabled: true
       content:
-        post: "Stream 'Digital Dystopia' on YouTube Music! #DevCo #NewRelease"
-        link: "https://music.youtube.com/track/digital-dystopia"
+        post: "Stream 'Spectral Memories' on YouTube Music! #TheDarkNavy #NewRelease"
+        link: "https://music.youtube.com/track/spectral-memories"
         media: "./assets/audio/teaser-1.mp3"
 
   digital_stores:
     - platform: "iTunes"
-      url: "https://music.apple.com/artist/devco"
+      url: "https://music.apple.com/artist/thedarknavy"
       icon: "itunes"
       enabled: true
       content:
-        post: "Download 'Digital Dystopia' on iTunes now! #DevCo #NewMusic"
-        link: "https://music.apple.com/track/digital-dystopia"
+        post: "Download 'Spectral Memories' on iTunes now! #TheDarkNavy #NewMusic"
+        link: "https://music.apple.com/track/spectral-memories"
         media: "./assets/audio/teaser-1.mp3"
-    - platform: "Beatport"
-      url: "https://beatport.com/artist/devco"
-      icon: "beatport"
+    - platform: "Bandcamp"
+      url: "https://thedarknavy.bandcamp.com"
+      icon: "bandcamp"
       enabled: true
       content:
-        post: "Electronic heads, grab 'Digital Dystopia' on Beatport! #DevCo #EDM"
-        link: "https://beatport.com/track/digital-dystopia"
+        post: "Support independent music. Get 'Spectral Memories' on Bandcamp! #TheDarkNavy #PostPunk"
+        link: "https://thedarknavy.bandcamp.com/track/spectral-memories"
         media: "./assets/audio/teaser-1.mp3"
 
   misc:
-    - platform: "Peloton"
-      url: "https://onepeloton.com/artists/devco"
-      icon: "peloton"
+    - platform: "Local Records USA"
+      url: "https://localrecordsusa.com/artists/thedarknavy"
+      icon: "record-label"
       enabled: true
       content:
-        post: "Ride to 'Digital Dystopia' on Peloton! #DevCo #WorkoutVibes"
-        link: "https://onepeloton.com/class/devco-workout"
+        post: "Proud to be on Local Records USA. Check out our label page! #TheDarkNavy #LocalRecordsUSA"
+        link: "https://localrecordsusa.com/artists/thedarknavy"
         media: "./assets/audio/teaser-1.mp3"
 
 # Navigation (updated to include Channels section)
