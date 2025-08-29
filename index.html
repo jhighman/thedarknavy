@@ -63,16 +63,34 @@
     </style>
 </head>
 <body class="bg-navy text-white-spark overflow-x-hidden">
-    <!-- Moon Cursor Follower -->
-    <div class="cursor-follower fixed w-24 h-24 rounded-full pointer-events-none z-50 opacity-0 moon-cursor">
-        <!-- Moon texture overlay -->
-        <div class="absolute inset-0 rounded-full bg-gradient-to-br from-gray-200 via-gray-300 to-gray-100 opacity-90"></div>
-        <!-- Moon craters -->
-        <div class="absolute top-4 left-6 w-4 h-4 rounded-full bg-gray-400 opacity-30"></div>
-        <div class="absolute top-12 right-8 w-6 h-6 rounded-full bg-gray-400 opacity-30"></div>
-        <div class="absolute bottom-5 left-10 w-3 h-3 rounded-full bg-gray-400 opacity-30"></div>
-        <!-- Moon shadow -->
-        <div class="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-transparent to-gray-900 opacity-20"></div>
+    <!-- Wave Cursor Follower -->
+    <div class="cursor-follower fixed w-40 h-40 pointer-events-none z-50 opacity-0 wave-cursor">
+        <!-- Ocean Waves -->
+        <div class="waves absolute inset-0 overflow-hidden">
+            <svg viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                <!-- First wave layer -->
+                <path class="wave wave-1" d="M0 100 Q 50 70, 100 100 T 200 100 T 300 100 T 400 100" fill="#0F1E33" opacity="0.6">
+                    <animate attributeName="d" dur="7s" repeatCount="indefinite"
+                        values="M0 100 Q 50 70, 100 100 T 200 100 T 300 100 T 400 100;
+                               M0 100 Q 50 130, 100 100 T 200 100 T 300 100 T 400 100;
+                               M0 100 Q 50 70, 100 100 T 200 100 T 300 100 T 400 100" />
+                </path>
+                <!-- Second wave layer -->
+                <path class="wave wave-2" d="M0 100 Q 50 80, 100 100 T 200 100 T 300 100 T 400 100" fill="#2A9D8F" opacity="0.5">
+                    <animate attributeName="d" dur="5s" repeatCount="indefinite"
+                        values="M0 100 Q 50 80, 100 100 T 200 100 T 300 100 T 400 100;
+                               M0 100 Q 50 120, 100 100 T 200 100 T 300 100 T 400 100;
+                               M0 100 Q 50 80, 100 100 T 200 100 T 300 100 T 400 100" />
+                </path>
+                <!-- Third wave layer -->
+                <path class="wave wave-3" d="M0 100 Q 50 90, 100 100 T 200 100 T 300 100 T 400 100" fill="#C5FF45" opacity="0.3">
+                    <animate attributeName="d" dur="3s" repeatCount="indefinite"
+                        values="M0 100 Q 50 90, 100 100 T 200 100 T 300 100 T 400 100;
+                               M0 100 Q 50 110, 100 100 T 200 100 T 300 100 T 400 100;
+                               M0 100 Q 50 90, 100 100 T 200 100 T 300 100 T 400 100" />
+                </path>
+            </svg>
+        </div>
     </div>
 
     <!-- Sticky Header/Navigation -->

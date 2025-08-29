@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Initialize cursor follower
   initCursorFollower();
   
-  // Initialize 3D animation in hero section
-  init3DAnimation();
+  // Initialize 3D animation in hero section with lazy loading
+  init3DAnimationLazy();
   
   // Handle window resize for 3D animation
   window.addEventListener('resize', onWindowResize);
@@ -425,7 +425,41 @@ function updateLatestReleaseTeaser() {
  */
 
 /**
+ * Lazy load the 3D animation using Intersection Observer
+ * Only initializes when the hero section is in view
+ */
+function init3DAnimationLazy() {
+  const heroSection = document.querySelector('#hero');
+  if (!heroSection) return;
+  
+  console.log('Setting up lazy loading for 3D animation');
+  
+  // Create an intersection observer
+  const observer = new IntersectionObserver((entries) => {
+    // If hero section is intersecting (visible)
+    if (entries[0].isIntersecting) {
+      console.log('Hero section in view, initializing 3D animation');
+      
+      // Initialize the 3D animation
+      init3DAnimation();
+      
+      // Disconnect the observer once animation is initialized
+      observer.disconnect();
+    }
+  }, {
+    // Initialize when at least 20% of the hero section is visible
+    threshold: 0.2,
+    // Start loading slightly before the section comes into view
+    rootMargin: '100px 0px'
+  });
+  
+  // Start observing the hero section
+  observer.observe(heroSection);
+}
+
+/**
  * Initialize 3D animation in the hero section
+ * Called by the Intersection Observer when hero section is in view
  */
 function init3DAnimation() {
   const canvas = document.getElementById('hero-canvas');
@@ -446,48 +480,99 @@ function init3DAnimation() {
   
   // Create particle geometry
   const particleGeometry = new THREE.BufferGeometry();
-  const particleCount = 1500;
+  // Reduce particle count for better performance, especially on mobile
+  const particleCount = window.innerWidth <= 768 ? 600 : 1000;
   
   const positions = new Float32Array(particleCount * 3);
   const colors = new Float32Array(particleCount * 3);
+  const sizes = new Float32Array(particleCount);
   
+  // Nautical-themed color palette based on the poster
   const colorOptions = [
-    new THREE.Color(0xFFC107), // golden-blaze
-    new THREE.Color(0x26A69A), // teal-pulse
-    new THREE.Color(0xFFFFFF)  // white
+    new THREE.Color(0x1A2A44), // dark navy blue
+    new THREE.Color(0xF4A261), // sandy orange
+    new THREE.Color(0xE9C46A), // golden yellow
+    new THREE.Color(0x2A9D8F), // teal
+    new THREE.Color(0xF4EBD0)  // cream/white
   ];
   
+  // Create groups of particles for ship-like formations
+  const shipCount = 3; // Number of "ships"
+  const particlesPerShip = Math.floor(particleCount / (shipCount + 1)); // Reserve some particles for general sea
+  
   for (let i = 0; i < particleCount; i++) {
-    // Position particles in a sphere
-    const radius = 20 + Math.random() * 10;
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.random() * Math.PI;
+    // Determine if this particle is part of a ship formation
+    const isShipParticle = i < particlesPerShip * shipCount;
+    const shipIndex = Math.floor(i / particlesPerShip);
     
-    positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);     // x
-    positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta); // y
-    positions[i * 3 + 2] = radius * Math.cos(phi);                   // z
-    
-    // Assign random colors from our options
-    const color = colorOptions[Math.floor(Math.random() * colorOptions.length)];
-    colors[i * 3] = color.r;
-    colors[i * 3 + 1] = color.g;
-    colors[i * 3 + 2] = color.b;
+    if (isShipParticle) {
+      // Position particles in ship-like formations
+      // Each "ship" is at a different position
+      const shipOffset = (shipIndex - 1) * 15; // Spread ships horizontally
+      const localIndex = i % particlesPerShip;
+      const shipProgress = localIndex / particlesPerShip;
+      
+      // Create a more ship-like shape - denser at the center
+      const radius = 5 + Math.random() * 3;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = (Math.random() * 0.5 + 0.25) * Math.PI; // Concentrate around the equator
+      
+      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta) + shipOffset;     // x
+      positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta) - 5;          // y (lower in the scene)
+      positions[i * 3 + 2] = radius * Math.cos(phi) - 10 + shipIndex * 10;          // z (different depths)
+      
+      // Ship particles are more golden/orange
+      const color = colorOptions[shipIndex % 2 + 1]; // Use sandy orange or golden yellow
+      colors[i * 3] = color.r;
+      colors[i * 3 + 1] = color.g;
+      colors[i * 3 + 2] = color.b;
+      
+      // Slightly larger particles for ships
+      sizes[i] = 0.15 + Math.random() * 0.05;
+    } else {
+      // Position remaining particles in a wave-like sea formation
+      const radius = 20 + Math.random() * 15;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.random() * Math.PI;
+      
+      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);     // x
+      positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta); // y
+      positions[i * 3 + 2] = radius * Math.cos(phi);                   // z
+      
+      // Sea particles use the full color palette with emphasis on blues and teals
+      const colorIndex = Math.random() < 0.7 ?
+                         (Math.random() < 0.7 ? 0 : 3) : // 49% dark navy, 21% teal
+                         Math.floor(Math.random() * colorOptions.length); // 30% any color
+      const color = colorOptions[colorIndex];
+      colors[i * 3] = color.r;
+      colors[i * 3 + 1] = color.g;
+      colors[i * 3 + 2] = color.b;
+      
+      // Varied sizes for sea particles
+      sizes[i] = 0.05 + Math.random() * 0.1;
+    }
   }
   
   particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  particleGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
   
-  // Create particle material
+  // Create particle material with custom shader for better looking particles
   const particleMaterial = new THREE.PointsMaterial({
     size: 0.1,
     vertexColors: true,
     transparent: true,
-    opacity: 0.8
+    opacity: 0.8,
+    sizeAttenuation: true,
+    vertexSizes: true // Use the size attribute
   });
   
   // Create particle system
   particles = new THREE.Points(particleGeometry, particleMaterial);
   scene.add(particles);
+  
+  // Store the last animation time for frame rate control
+  window.lastAnimationTime = performance.now();
   
   // Start animation loop
   animate();
@@ -499,17 +584,147 @@ function init3DAnimation() {
 function animate() {
   animationId = requestAnimationFrame(animate);
   
-  // Rotate the particle system
+  // Frame rate control for performance
+  const now = performance.now();
+  const elapsed = now - (window.lastAnimationTime || 0);
+  
+  // Target ~60 FPS (16.67ms) but allow for some flexibility
+  if (elapsed < 16) {
+    return; // Skip this frame
+  }
+  
+  // Store the time for the next frame calculation
+  window.lastAnimationTime = now;
+  
   if (particles) {
-    particles.rotation.x += 0.0005;
-    particles.rotation.y += 0.001;
+    const positions = particles.geometry.attributes.position.array;
+    const colors = particles.geometry.attributes.color.array;
+    const particleCount = positions.length / 3;
     
-    // Make particles react to mouse movement
-    const mouseX = (window.mouseX || 0) - window.innerWidth / 2;
-    const mouseY = (window.mouseY || 0) - window.innerHeight / 2;
+    // Get mouse position for interactive effects
+    const mouseX = (window.mouseX || window.innerWidth / 2) - window.innerWidth / 2;
+    const mouseY = (window.mouseY || window.innerHeight / 2) - window.innerHeight / 2;
     
-    particles.rotation.x += (mouseY * 0.00001);
-    particles.rotation.y += (mouseX * 0.00001);
+    // Time-based animation factors
+    const time = Date.now() * 0.001;
+    
+    // Get wave intensity from cursor follower (default to 1.0 if not set)
+    const waveIntensity = window.waveIntensity || 1.0;
+    const waveSpeed = 0.3 * waveIntensity;
+    
+    // Get wave direction from cursor follower
+    const waveDirection = window.waveDirection || { x: 0, y: 0 };
+    
+    // Check for cursor ripple effect
+    const cursorRipple = window.cursorRipple || null;
+    
+    // Check for hover effect on interactive elements
+    const hoverEffect = window.particleHoverEffect || false;
+    
+    // Ship movement progress - speed up when hovering over interactive elements
+    const shipSpeedMultiplier = hoverEffect ? 1.5 : 1.0;
+    window.shipProgress = (window.shipProgress || 0) + (0.005 * shipSpeedMultiplier);
+    if (window.shipProgress > Math.PI * 2) window.shipProgress = 0;
+    
+    // Process each particle
+    for (let i = 0; i < particleCount; i++) {
+      const idx = i * 3;
+      
+      // Determine if this is a ship particle (first third of particles)
+      const shipCount = 3;
+      const particlesPerShip = Math.floor(particleCount / (shipCount + 1));
+      const isShipParticle = i < particlesPerShip * shipCount;
+      const shipIndex = Math.floor(i / particlesPerShip);
+      
+      if (isShipParticle) {
+        // Ship-like movement pattern
+        // Forward movement with slight bobbing
+        positions[idx + 2] += 0.02 * shipSpeedMultiplier; // Move forward along z-axis
+        
+        // Reset ship position when it goes too far
+        if (positions[idx + 2] > 40) {
+          positions[idx + 2] = -40;
+        }
+        
+        // Sway side to side based on ship index and time
+        positions[idx] += Math.sin(window.shipProgress + shipIndex * 0.5) * 0.02;
+        
+        // Bob up and down like a ship on waves
+        positions[idx + 1] += Math.sin(window.shipProgress * 1.5 + shipIndex) * 0.01;
+        
+        // Subtle color pulsing for ship particles
+        const colorPulse = Math.sin(time + i * 0.1) * 0.1 * waveIntensity;
+        colors[idx] = Math.min(Math.max(colors[idx] + colorPulse, 0), 1); // Red
+        colors[idx + 1] = Math.min(Math.max(colors[idx + 1] + colorPulse * 0.5, 0), 1); // Green
+        
+        // Make ships respond to wave direction from cursor
+        if (Math.abs(waveDirection.x) > 0.1 || Math.abs(waveDirection.y) > 0.1) {
+          positions[idx] += waveDirection.x * 0.01 * waveIntensity;
+          positions[idx + 1] += waveDirection.y * 0.01 * waveIntensity;
+        }
+      } else {
+        // Wave-like motion for sea particles
+        // Calculate base position
+        const x = positions[idx];
+        const y = positions[idx + 1];
+        const z = positions[idx + 2];
+        
+        // Wave effect: particles move in a sinusoidal pattern
+        // Intensity affected by cursor follower
+        positions[idx + 2] += Math.sin(time * waveSpeed + x * 0.1) * 0.05 * waveIntensity;
+        
+        // Mouse interaction: create ripple effect from mouse position
+        const dx = x - mouseX * 0.01;
+        const dy = y - mouseY * 0.01;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Ripple effect - waves emanate from cursor position
+        if (distance < 20) { // Only affect particles within a certain radius
+          const rippleFactor = (1 - distance / 20) * 0.2 * waveIntensity;
+          positions[idx + 2] += Math.sin(time * 2 - distance) * rippleFactor;
+        }
+        
+        // Special ripple effect from cursor follower
+        if (cursorRipple) {
+          // Convert cursor position to particle space
+          const cursorX = cursorRipple.x * 20; // Scale to particle space
+          const cursorY = cursorRipple.y * 20;
+          
+          // Calculate distance from cursor ripple center
+          const dxRipple = x - cursorX;
+          const dyRipple = y - cursorY;
+          const rippleDistance = Math.sqrt(dxRipple * dxRipple + dyRipple * dyRipple);
+          
+          // Create expanding ripple effect
+          const rippleTime = time - cursorRipple.time;
+          const rippleRadius = rippleTime * 10; // Expand over time
+          const rippleWidth = 5;
+          
+          if (Math.abs(rippleDistance - rippleRadius) < rippleWidth && rippleTime < 2) {
+            // Particles at the ripple edge move more
+            const rippleIntensity = cursorRipple.intensity * (1 - rippleTime / 2); // Fade over time
+            positions[idx + 2] += Math.sin(rippleTime * 10) * rippleIntensity * 0.5;
+          }
+        }
+        
+        // Subtle color shifts for sea particles based on height (z position)
+        const heightFactor = (Math.sin(time + positions[idx + 2]) + 1) * 0.5 * 0.1 * waveIntensity;
+        colors[idx + 2] += heightFactor; // Adjust blue component based on height
+        colors[idx + 2] = Math.min(Math.max(colors[idx + 2], 0), 1); // Clamp to valid range
+      }
+    }
+    
+    // Update geometry attributes
+    particles.geometry.attributes.position.needsUpdate = true;
+    particles.geometry.attributes.color.needsUpdate = true;
+    
+    // Gentle overall rotation, affected by hover state
+    const rotationSpeed = hoverEffect ? 0.003 : 0.001;
+    particles.rotation.y += rotationSpeed;
+    
+    // Camera tilt based on mouse position for immersion
+    camera.rotation.x = mouseY * 0.00005 * waveIntensity;
+    camera.rotation.y = mouseX * 0.00005 * waveIntensity;
   }
   
   // Render the scene
@@ -825,25 +1040,33 @@ function initMediaPlayers() {
 }
 
 /**
- * Initialize moon cursor follower - bounded to hero section only and hidden over latest release
+ * Initialize wave cursor follower - bounded to hero section only and hidden over latest release
+ * The waves flow in the direction of the cursor movement and interact with 3D particles
  */
 function initCursorFollower() {
   const cursor = document.querySelector('.cursor-follower');
   const heroSection = document.querySelector('#hero');
   const latestReleaseTeaser = document.querySelector('.latest-release-teaser');
+  const waves = cursor.querySelectorAll('.wave');
   
-  if (cursor && heroSection && latestReleaseTeaser) {
+  if (cursor && heroSection && latestReleaseTeaser && waves.length) {
     // Only enable on desktop
     if (window.innerWidth > 768) {
       cursor.style.opacity = '0'; // Start hidden
       
-      // Add a slight delay to make the moon movement more smooth and celestial
+      // Variables for smooth movement
       let mouseX = 0;
       let mouseY = 0;
       let cursorX = 0;
       let cursorY = 0;
+      let prevMouseX = 0;
+      let prevMouseY = 0;
       let isInHeroSection = false;
       let isOverLatestRelease = false;
+      
+      // Store wave intensity for 3D particle integration
+      window.waveIntensity = 1.0;
+      window.waveDirection = { x: 0, y: 0 };
       
       // Check if mouse is in hero section
       function checkIfInHeroSection(x, y) {
@@ -868,6 +1091,8 @@ function initCursorFollower() {
       }
       
       document.addEventListener('mousemove', (e) => {
+        prevMouseX = mouseX;
+        prevMouseY = mouseY;
         mouseX = e.clientX;
         mouseY = e.clientY;
         
@@ -879,36 +1104,107 @@ function initCursorFollower() {
         // Hide when over latest release section for easier clicking
         if (isInHeroSection && !isOverLatestRelease) {
           cursor.style.opacity = '1';
+          
+          // Calculate movement vector for 3D particles to use
+          const deltaX = mouseX - prevMouseX;
+          const deltaY = mouseY - prevMouseY;
+          const movementSpeed = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+          
+          // Update global wave direction for 3D particles to reference
+          if (movementSpeed > 1) {
+            window.waveDirection = {
+              x: deltaX / movementSpeed,
+              y: deltaY / movementSpeed
+            };
+          }
         } else {
           cursor.style.opacity = '0';
         }
       });
       
       // Use requestAnimationFrame for smoother movement
-      function animateMoon() {
+      function animateWaves() {
         if (isInHeroSection && !isOverLatestRelease) {
-          // Add slight lag for more natural moon-like movement
+          // Add slight lag for more natural wave movement
           const lagFactor = 0.1;
           cursorX += (mouseX - cursorX) * lagFactor;
           cursorY += (mouseY - cursorY) * lagFactor;
           
+          // Position the cursor follower
           gsap.set(cursor, {
-            x: cursorX,
-            y: cursorY,
+            x: cursorX - cursor.offsetWidth / 2,
+            y: cursorY - cursor.offsetHeight / 2,
+            borderRadius: 0, // Ensure no rounded corners
+            background: 'transparent' // Ensure no background
           });
           
-          // Add a subtle floating effect
+          // Calculate direction of mouse movement
+          const deltaX = mouseX - prevMouseX;
+          const deltaY = mouseY - prevMouseY;
+          
+          // Only update wave direction if there's significant movement
+          if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) {
+            // Calculate angle of movement (in radians)
+            const angle = Math.atan2(deltaY, deltaX);
+            
+            // Convert to degrees and adjust for SVG rotation
+            const degrees = angle * (180 / Math.PI);
+            
+            // Apply rotation to waves with different speeds for each layer
+            waves.forEach((wave, index) => {
+              // Different rotation speeds for each wave layer
+              const rotationSpeed = 1 - (index * 0.2); // 1, 0.8, 0.6 for the three waves
+              
+              // Apply transform to control wave direction
+              gsap.to(wave, {
+                rotation: degrees * rotationSpeed,
+                transformOrigin: "center center",
+                duration: 1.5,
+                ease: "power1.out"
+              });
+              
+              // Adjust wave animation speed based on mouse movement speed
+              const movementSpeed = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+              const speedFactor = Math.min(Math.max(movementSpeed / 10, 0.5), 3);
+              
+              // Store wave intensity for 3D particles to reference
+              window.waveIntensity = speedFactor;
+              
+              // Different durations for each wave
+              const baseDuration = 7 - (index * 2); // 7s, 5s, 3s
+              const newDuration = baseDuration / speedFactor;
+              
+              // Update animation duration
+              const animateElement = wave.querySelector('animate');
+              if (animateElement) {
+                animateElement.setAttribute('dur', `${newDuration}s`);
+              }
+            });
+            
+            // Create a ripple in the 3D particles at cursor position
+            if (particles && particles.geometry) {
+              // Trigger a more intense ripple in the 3D particles
+              window.cursorRipple = {
+                x: (mouseX / window.innerWidth) * 2 - 1,
+                y: -(mouseY / window.innerHeight) * 2 + 1,
+                intensity: Math.min(movementSpeed / 5, 2),
+                time: Date.now() * 0.001
+              };
+            }
+          }
+          
+          // Pulse effect for the cursor
           gsap.to(cursor, {
-            rotation: Math.sin(Date.now() / 3000) * 5, // Gentle rotation
+            scale: 1 + Math.sin(Date.now() / 1000) * 0.05,
             duration: 0.5,
             overwrite: true
           });
         }
         
-        requestAnimationFrame(animateMoon);
+        requestAnimationFrame(animateWaves);
       }
       
-      animateMoon();
+      animateWaves();
       
       // Special effects on links within hero section (excluding latest release)
       const heroTextSection = heroSection.querySelector('.hero-text');
@@ -917,18 +1213,30 @@ function initCursorFollower() {
         heroLinks.forEach(link => {
           link.addEventListener('mouseenter', () => {
             if (isInHeroSection && !isOverLatestRelease) {
-              // Make the moon glow brighter on hover
+              // Make the waves more active and glow on hover
               gsap.to(cursor, {
                 scale: 1.2,
                 duration: 0.5,
-                boxShadow: '0 0 30px rgba(255, 255, 255, 0.8), 0 0 50px rgba(255, 255, 255, 0.6), 0 0 70px rgba(255, 255, 255, 0.4)'
+                boxShadow: '0 0 30px rgba(197, 255, 69, 0.8), 0 0 50px rgba(42, 157, 143, 0.6)'
               });
               
-              // Make the moon craters more visible
-              gsap.to(cursor.querySelectorAll('div'), {
-                opacity: '+= 0.2',
-                duration: 0.5
+              // Increase wave animation speed
+              waves.forEach((wave, index) => {
+                const animateElement = wave.querySelector('animate');
+                if (animateElement) {
+                  const baseDuration = 7 - (index * 2); // 7s, 5s, 3s
+                  animateElement.setAttribute('dur', `${baseDuration * 0.7}s`);
+                }
               });
+              
+              // Increase 3D particle animation intensity
+              window.waveIntensity = 2.0;
+              
+              // Also affect the 3D particles - make them more active
+              if (particles) {
+                // Increase rotation speed temporarily
+                window.particleHoverEffect = true;
+              }
             }
           });
           
@@ -937,14 +1245,23 @@ function initCursorFollower() {
               gsap.to(cursor, {
                 scale: 1,
                 duration: 0.5,
-                boxShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.4), 0 0 40px rgba(255, 255, 255, 0.2)'
+                boxShadow: '0 0 20px rgba(197, 255, 69, 0.4), 0 0 30px rgba(42, 157, 143, 0.3)'
               });
               
-              // Return craters to normal opacity
-              gsap.to(cursor.querySelectorAll('div'), {
-                opacity: '-= 0.2',
-                duration: 0.5
+              // Return wave animation speed to normal
+              waves.forEach((wave, index) => {
+                const animateElement = wave.querySelector('animate');
+                if (animateElement) {
+                  const baseDuration = 7 - (index * 2); // 7s, 5s, 3s
+                  animateElement.setAttribute('dur', `${baseDuration}s`);
+                }
               });
+              
+              // Reset 3D particle animation intensity
+              window.waveIntensity = 1.0;
+              
+              // Reset 3D particle hover effect
+              window.particleHoverEffect = false;
             }
           });
         });
