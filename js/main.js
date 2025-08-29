@@ -810,8 +810,8 @@ function initSmoothScrolling() {
       const targetElement = document.querySelector(targetId);
       
       if (targetElement) {
-        // Offset for fixed header
-        const headerOffset = 80;
+        // Offset for fixed header (adjusted for the single header with wave background)
+        const headerOffset = 100;
         const elementPosition = targetElement.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
         
@@ -831,7 +831,7 @@ function initSmoothScrolling() {
     const scrollPosition = window.scrollY;
     
     document.querySelectorAll('section').forEach(section => {
-      const sectionTop = section.offsetTop - 100;
+      const sectionTop = section.offsetTop - 120; // Adjusted for single header
       const sectionHeight = section.offsetHeight;
       const sectionId = section.getAttribute('id');
       
